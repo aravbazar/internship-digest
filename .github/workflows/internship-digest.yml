@@ -2,10 +2,16 @@ name: Daily Internship Digest
 
 on:
   schedule:
-    # 12:45 UTC = 7:45 AM CDT (Mar-Nov). GitHub cron has no DST awareness,
-    # so this becomes 6:45 AM CST in winter. Change to "45 13 * * *" in
-    # early November if you want it to stay at 7:45 local.
+    # Twice daily. GitHub cron is UTC and has no DST awareness, so both of
+    # these land an hour earlier in local time once CST starts in November.
+    # Add an hour to each ("45 13" / "45 00") in early November to hold the
+    # local times below. Note "45 00" also shifts the evening run's UTC date
+    # to the next day, which is expected.
+    #
+    # 12:45 UTC = 7:45 AM CDT / 6:45 AM CST - overnight catch-up
     - cron: "45 12 * * *"
+    # 23:45 UTC = 6:45 PM CDT / 5:45 PM CST - same-day sweep
+    - cron: "45 23 * * *"
   workflow_dispatch:
     inputs:
       seed_only:
