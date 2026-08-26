@@ -195,18 +195,18 @@ def save_seen(keys: set[str]) -> None:
 
 def format_date(ts: int) -> str:
     if not ts:
-        return "\\u2014"
+        return "—"
     try:
         return datetime.fromtimestamp(int(ts), TIMEZONE).strftime("%b %-d")
     except (ValueError, OSError):
-        return "\\u2014"
+        return "—"
 
 
 def format_locations(locations: list[str]) -> str:
     if not locations:
-        return "\\u2014"
+        return "—"
     if len(locations) <= 2:
-        return " \\u00b7 ".join(locations)
+        return " · ".join(locations)
     return f"{locations[0]} +{len(locations) - 1} more"
 
 
@@ -216,10 +216,10 @@ def build_html(new_roles: list[dict], total_tracked: int) -> str:
     if not new_roles:
         return f"""<html><body style="font-family:-apple-system,Segoe UI,Roboto,sans-serif;
 color:#1a1a1a;max-width:680px;margin:0 auto;padding:24px">
-<h2 style="margin:0 0 4px">Internship digest \\u2014 {today}</h2>
+<h2 style="margin:0 0 4px">Internship digest — {today}</h2>
 <p style="color:#666;margin:0 0 20px">No new postings since the last run.</p>
 <p style="color:#888;font-size:13px">Tracking {total_tracked} live roles across
-{len(SOURCES)} repos. The job ran fine \\u2014 quiet days are normal, especially on
+{len(SOURCES)} repos. The job ran fine — quiet days are normal, especially on
 weekends.</p></body></html>"""
 
     grouped: dict[str, list[dict]] = {}
@@ -240,7 +240,7 @@ weekends.</p></body></html>"""
                 f'<a href="{link}" style="color:#0645ad;text-decoration:none">'
                 f'{role["title"]}</a>' if link else role["title"]
             )
-            terms = ", ".join(role["terms"]) if role["terms"] else "\\u2014"
+            terms = ", ".join(role["terms"]) if role["terms"] else "—"
             # "Other" is the schema's default and appears on ~everything;
             # only surface genuinely restrictive flags.
             sponsor = role["sponsorship"]
@@ -276,13 +276,13 @@ text-transform:uppercase;letter-spacing:.04em;color:#444">
 
     return f"""<html><body style="font-family:-apple-system,Segoe UI,Roboto,sans-serif;
 color:#1a1a1a;max-width:680px;margin:0 auto;padding:24px">
-<h2 style="margin:0 0 4px">Internship digest \\u2014 {today}</h2>
+<h2 style="margin:0 0 4px">Internship digest — {today}</h2>
 <p style="color:#666;margin:0 0 4px"><strong>{len(new_roles)} new</strong>
-since the last run \\u00b7 {total_tracked} live roles tracked</p>
+since the last run · {total_tracked} live roles tracked</p>
 {truncated}
 {"".join(sections)}
 <p style="color:#999;font-size:12px;margin-top:32px;border-top:1px solid #eee;
-padding-top:12px">Rolling review \\u2014 same-day applications get seen first.</p>
+padding-top:12px">Rolling review — same-day applications get seen first.</p>
 </body></html>"""
 
 
@@ -291,13 +291,13 @@ def build_text(new_roles: list[dict], total_tracked: int) -> str:
         return f"No new postings. Tracking {total_tracked} live roles."
     lines = [f"{len(new_roles)} new postings ({total_tracked} tracked)", ""]
     for role in new_roles:
-        lines.append(f"[{role['category']}] {role['company']} \\u2014 {role['title']}")
-        lines.append(f"  {format_locations(role['locations'])} \\u00b7 "
+        lines.append(f"[{role['category']}] {role['company']} — {role['title']}")
+        lines.append(f"  {format_locations(role['locations'])} · "
                      f"{format_date(role['date_posted'])}")
         if role["url"]:
             lines.append(f"  {role['url']}")
         lines.append("")
-    return "\\n".join(lines)
+    return "\n".join(lines)
 
 
 # --------------------------------------------------------------------------
@@ -348,9 +348,9 @@ def main() -> int:
     )[:MAX_ROLES_IN_EMAIL]
 
     count = len(new_keys)
-    subject = (f"{count} new internship{'s' if count != 1 else ''} \\u2014 "
+    subject = (f"{count} new internship{'s' if count != 1 else ''} — "
                f"{datetime.now(TIMEZONE).strftime('%b %-d')}"
-               ) if count else "Internship digest \\u2014 nothing new"
+               ) if count else "Internship digest — nothing new"
 
     # The evening sweep stays silent when there is nothing to report, so an
     # empty inbox just means no new roles. The morning run always sends, which
