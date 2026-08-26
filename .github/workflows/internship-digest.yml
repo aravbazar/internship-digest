@@ -1,16 +1,19 @@
-name: Daily Internship Digest
+name: Internship Digest
 
 on:
   schedule:
-    # Twice daily. GitHub cron is UTC and has no DST awareness, so both of
-    # these land an hour earlier in local time once CST starts in November.
-    # Add an hour to each ("45 13" / "45 00") in early November to hold the
-    # local times below. Note "45 00" also shifts the evening run's UTC date
-    # to the next day, which is expected.
+    # Twice daily, in UTC. GitHub cron has no DST awareness, so both of these
+    # land an hour earlier in local time once CST starts in November.
     #
-    # 12:45 UTC = 7:45 AM CDT / 6:45 AM CST - overnight catch-up
+    #   "45 12"  = 7:45 AM CDT / 6:45 AM CST  - overnight catch-up
+    #   "45 23"  = 6:45 PM CDT / 5:45 PM CST  - same-day sweep
+    #
+    # To hold the local times through winter, add an hour to each: "45 13"
+    # and "45 00". Note "45 00" also moves the evening run's UTC date to the
+    # next day, which is expected. If you change the evening cron, update the
+    # matching string in QUIET_IF_EMPTY below or the evening run will start
+    # emailing on quiet days again.
     - cron: "45 12 * * *"
-    # 23:45 UTC = 6:45 PM CDT / 5:45 PM CST - same-day sweep
     - cron: "45 23 * * *"
   workflow_dispatch:
     inputs:
@@ -30,9 +33,9 @@ jobs:
   digest:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
@@ -42,6 +45,10 @@ jobs:
           SMTP_APP_PASSWORD: ${{ secrets.SMTP_APP_PASSWORD }}
           MAIL_TO: ${{ secrets.MAIL_TO }}
           SEED_ONLY: ${{ inputs.seed_only }}
+          # Only the evening sweep goes quiet on a no-new-roles day. The
+          # morning run always emails, so a missing morning digest means the
+          # job broke rather than the day being slow. Manual runs always email.
+          QUIET_IF_EMPTY: ${{ github.event.schedule == '45 23 * * *' }}
         run: python digest.py
 
       - name: Commit updated state
@@ -49,5 +56,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A state/
-          git diff --staged --quiet || git commit -m "state: $(date -u +%Y-%m-%d)"
+          git diff --staged --quiet || git commit -m "state: $(date -u +'%Y-%m-%d %H:%M') UTC"
           git push
