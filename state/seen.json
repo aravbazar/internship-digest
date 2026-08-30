@@ -1,6 +1,6 @@
 {
- "last_run": "2026-08-29T16:53:14.004811+00:00",
- "count": 2314,
+ "last_run": "2026-08-30T01:38:26.311667+00:00",
+ "count": 2318,
  "keys": [
   "10alabs|engineeringfellow",
   "1x|airesidencyintern",
@@ -406,6 +406,8 @@
   "caci|softwaredeveloperdatascientistinternsummer2027",
   "caddiworkflowautomation|softwareengineerintern",
   "cadencedesignsystems|analogmixedsignalicdesigncoopintern",
+  "cadencedesignsystems|characterizationandsupportinternfall2026",
+  "cadencedesignsystems|postsiliconvalidationengineeringinterncharacterizationandsupport",
   "cadencedesignsystems|productengineeringinternelectronicshardwaredesign",
   "cadencedesignsystems|softwareintern",
   "cae|engineeringcoop",
@@ -1050,6 +1052,7 @@
   "kid|productintern",
   "kirin|quantitativeresearchinternpredictionmarkets",
   "kla|softwareengineeringintern",
+  "kochindustries|datadevelopercoop",
   "kodiakrobotics|aimlinternartificialintelligencemachinelearning",
   "kodiakrobotics|behaviorplanninginternmotionplanning",
   "kodiakrobotics|controlsintern",
@@ -1916,6 +1919,7 @@
   "texasaminternationaluniversity|undergraduateresearchassistantengineeringdrky",
   "texasinstruments|layoutdesignintern",
   "texasinstruments|productoperationsanalystintern",
+  "theaenergy|physicsintern",
   "theboeingcompany|dataanalyticsintern",
   "theboeingcompany|interntoentrylevelconversioninternprogramengineering",
   "thebrowsercompany|aiprototyperresident",
